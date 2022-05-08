@@ -7,6 +7,7 @@ lazy_static! {
     };
 }
 
+/// Writes in COM1 to write debug messages to qemu -serial arg
 #[macro_export]
 macro_rules! log {
     ($message:tt) => {

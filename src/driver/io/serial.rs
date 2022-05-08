@@ -1,12 +1,15 @@
 use crate::driver::io::port::Port;
 
+/// The location of COM1
 pub const COM1: u16 = 0x3F8;
 
+/// Represents a Serial Port
 pub struct Serial {
     port: Port
 }
 
 impl Serial {
+    /// Creates the Serial Struct and initializes the port
     pub fn new(com: u16) -> Self {
         let serial = Self {
             port: Port::new(com)

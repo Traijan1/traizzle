@@ -18,6 +18,7 @@ fn panic_handler(_info: &PanicInfo) -> ! {
     loop {}
 }
 
+/// The entry point for **Traizzle**
 #[no_mangle]
 fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     log!("Hello World from Kernel to Serial Port!");
