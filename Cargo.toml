@@ -11,5 +11,14 @@ panic = "abort"
 [profile.release]
 panic = "abort"
 
+[workspace]
+members = [
+    "boot",
+]
+
 [dependencies]
 bootloader = "0.10.12"
+
+[dependencies.lazy_static]
+version = "1.0"
+features = ["spin_no_std"]
