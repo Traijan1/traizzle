@@ -1,4 +1,5 @@
 /// Represents a single port
+#[derive(Clone, Copy, Debug)]
 pub struct Port {
     port: u16
 }

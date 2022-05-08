@@ -61,4 +61,5 @@ version = "0.1.0"
 dependencies = [
  "bootloader",
  "lazy_static",
+ "spin",
 ]

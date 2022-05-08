@@ -15,15 +15,15 @@ entry_point!(traizzle_main);
 
 #[panic_handler]
 fn panic_handler(_info: &PanicInfo) -> ! {
+    log!("Panic");
     loop {}
 }
 
 /// The entry point for **Traizzle**
 #[no_mangle]
 fn traizzle_main(_info: &'static mut BootInfo) -> ! {
-    log!("Hello World from Kernel to Serial Port!");
-    log!("Test");
-    
+    log!("Test {}", 10);
+
     loop {
         asm::hlt();
     }

@@ -1,3 +1,5 @@
+use core::fmt;
+
 use crate::driver::io::port::Port;
 
 /// The location of COM1
@@ -30,7 +32,7 @@ impl Serial {
         self.port.write_u8(char as u8);
     }
 
-    pub fn write_str(&self, message: &str) {
+    pub fn write(&self, message: &str) {
         message.chars().for_each(|char| self.write_char(char));
     }
 
@@ -57,4 +59,11 @@ impl Serial {
         // Set to normal mode
         self.port.write_u8_offset(4, 0x0F);
     } 
+}
+
+impl fmt::Write for Serial {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        self.write(s);
+        Ok(())
+    }
 }
