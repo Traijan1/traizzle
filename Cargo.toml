@@ -11,5 +11,10 @@ panic = "abort"
 [profile.release]
 panic = "abort"
 
+[workspace]
+members = [
+    "simple_boot",
+]
+
 [dependencies]
 bootloader = "0.10.12"
