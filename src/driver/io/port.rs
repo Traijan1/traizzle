@@ -1,4 +1,4 @@
-struct Port {
+pub struct Port {
     port: u16
 }
 
@@ -9,13 +9,22 @@ impl Port {
         }
     }
 
-    pub fn write_u8(self, data: u8) {
+    pub fn write_u8(&self, data: u8) {
         commands::outb(self.port, data);
         Self::io_wait();
     }
 
-    pub fn read_u8(self) -> u8 {
+    pub fn write_u8_offset(&self, offset: u16, data: u8) {
+        commands::outb(self.port + offset, data);
+        Self::io_wait();
+    }
+
+    pub fn read_u8(&self) -> u8 {
         commands::inb(self.port)
+    }
+
+    pub fn read_u8_offset(&self, offset: u16) -> u8 {
+        commands::inb(self.port + offset)
     }
  
     pub fn io_wait() {
