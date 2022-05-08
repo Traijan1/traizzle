@@ -1,7 +1,6 @@
 #![no_std]
 #![no_main]
 
-use core::arch::asm;
 use core::panic::PanicInfo;
 
 use bootloader::{entry_point, BootInfo};
@@ -10,6 +9,7 @@ mod driver;
 mod utils;
 
 use utils::debug;
+use utils::asm;
 
 entry_point!(traizzle_main);
 
@@ -25,6 +25,6 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     log!("Test");
 
     loop {
-        unsafe { asm!("hlt"); }
+        asm::hlt();
     }
 }
