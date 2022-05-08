@@ -1,5 +1,7 @@
 const COM1: u16 = 0x3F8;
 
+use crate::driver::io::port::commands::{inb, outb};
+
 /// Initializes the serial port COM1
 /// 
 /// Returns 1 if port is faulty and 0 if not
@@ -40,32 +42,4 @@ pub fn write_serial_char(a: char) {
 
 pub fn write_serial(a: &str) {
     a.chars().for_each(|char| write_serial_char(char));
-}
-
-use core::arch::asm;
-
-fn outb(port: u16, data: u8) {
-    unsafe {
-        asm!(r#"
-                out dx, al
-            "#,
-            in("dx") port,
-            in("al") data
-        )
-    }
-}
-
-fn inb(port: u16) -> u8 {
-    let mut data: u8;
-
-    unsafe {
-        asm!(r#"
-                in al, dx
-            "#,
-            in("dx") port,
-            out("al") data
-        )
-    }
-
-    data
 }

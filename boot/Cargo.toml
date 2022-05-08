@@ -1,9 +1,9 @@
 [package]
-name = "simple_boot"
+name = "boot"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# Bootloader included as described here: https://github.com/rust-osdev/bootloader/tree/main/examples/basic
 
 [dependencies]
 bootloader-locator = "0.0.4" # for locating the `bootloader` dependency on disk
