@@ -23,7 +23,7 @@ fn panic_handler(_info: &PanicInfo) -> ! {
 fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     log!("Hello World from Kernel to Serial Port!");
     log!("Test");
-
+    
     loop {
         asm::hlt();
     }
