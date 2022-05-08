@@ -1,5 +1,7 @@
 use crate::driver::io::port::Port;
 
+pub const COM1: u16 = 0x3F8;
+
 pub struct Serial {
     port: Port
 }
