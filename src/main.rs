@@ -7,9 +7,9 @@ use bootloader::{entry_point, BootInfo};
 
 mod driver;
 mod utils;
+mod asm;
 
 use utils::debug;
-use utils::asm;
 
 entry_point!(traizzle_main);
 
@@ -22,7 +22,7 @@ fn panic_handler(_info: &PanicInfo) -> ! {
 /// The entry point for **Traizzle**
 #[no_mangle]
 fn traizzle_main(_info: &'static mut BootInfo) -> ! {
-    log!("Test {}", 10);
+    log!("Physical Memory Offset: {:#x}", _info.physical_memory_offset.as_ref().unwrap());
 
     loop {
         asm::hlt();
