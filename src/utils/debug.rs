@@ -15,9 +15,9 @@ lazy_static! {
 #[macro_export]
 macro_rules! log {
     ($($arg:tt)*) => {
-        debug::SERIAL_COM1.lock().write("LOG: ");
+        crate::utils::debug::SERIAL_COM1.lock().write("LOG: ");
         $crate::debug::_log(format_args!($($arg)*));
-        debug::SERIAL_COM1.lock().write("\n");
+        crate::utils::debug::SERIAL_COM1.lock().write("\n");
     }
 }
 
