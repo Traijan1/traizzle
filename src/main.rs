@@ -11,7 +11,9 @@ mod asm;
 
 use utils::debug;
 
-use driver::graphics::framebuffer;
+use driver::graphics::framebuffer::Framebuffer;
+
+use crate::driver::graphics::framebuffer;
 
 entry_point!(traizzle_main);
 
@@ -30,8 +32,13 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     let info = &_info.framebuffer.as_ref().unwrap().info();
     let buffer = _info.framebuffer.as_mut().unwrap().buffer_mut();
 
-    framebuffer::draw_rectangle(buffer, info.stride, 300, 300, 0x0000FF00, 0, 0);
-    framebuffer::draw_rectangle(buffer, info.stride, 100, 100, 0x007F2F34, 100, 350);
+    let mut framebuffer = Framebuffer::new(buffer, info.stride);
+
+    framebuffer.draw_rectangle(300, 300, 0x0000FF00, 0, 0);
+    framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
+    framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
+
+    let test = buffer[0] as *mut u8;
 
     loop {
         asm::hlt();
