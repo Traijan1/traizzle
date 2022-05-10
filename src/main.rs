@@ -14,6 +14,7 @@ use utils::debug;
 use driver::graphics::framebuffer::Framebuffer;
 
 use crate::driver::graphics::framebuffer;
+use crate::driver::graphics::fonts::psf::PSF;
 
 entry_point!(traizzle_main);
 
@@ -32,13 +33,21 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     let info = &_info.framebuffer.as_ref().unwrap().info();
     let buffer = _info.framebuffer.as_mut().unwrap().buffer_mut();
 
-    let mut framebuffer = Framebuffer::new(buffer, info.stride);
+    let font: &[u8] = include_bytes!("zap-light16.psf");
+    let psf = PSF::new(font);
+    
+    let mut framebuffer = Framebuffer::new(buffer, info.stride, info.bytes_per_pixel, psf);
 
-    framebuffer.draw_rectangle(300, 300, 0x0000FF00, 0, 0);
-    framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
-    framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
+    framebuffer.clear();
 
-    let test = buffer[0] as *mut u8;
+    // framebuffer.draw_rectangle(300, 300, 0x0000FF00, 0, 0);
+    // framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
+    // framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
+
+    framebuffer.draw_char('O', 0, 0);
+    framebuffer.draw_char('H', 48, 16);
+    framebuffer.draw_char('H', 48, 16 * 2);
+    framebuffer.draw_char('H', 48, 16 * 3);
 
     loop {
         asm::hlt();
