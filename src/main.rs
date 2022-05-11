@@ -47,7 +47,7 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     let mut i = 0;
 
     "Hello World".chars().for_each(|char| {
-        framebuffer.draw_char(char, 8 * 4 * i, 0);
+        framebuffer.print_char(char, 8 * 4 * i, 0);
         i += 1;
     });
 

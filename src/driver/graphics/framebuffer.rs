@@ -33,7 +33,7 @@ impl<'a> Framebuffer<'a> {
         }
     }
 
-    pub fn draw_char(&mut self, char: char, x: usize, y: usize) {
+    pub fn print_char(&mut self, char: char, x: usize, y: usize) {
         let font_bytes = self.font.get_char(char);
 
         for (index, byte) in font_bytes.iter().enumerate() {
@@ -50,7 +50,7 @@ impl<'a> Framebuffer<'a> {
         }
     }
 
-    pub fn draw_pixel(&mut self, pos: usize, color: u32) {
+    fn draw_pixel(&mut self, pos: usize, color: u32) {
         self.buffer[pos] = (color & 255) as u8;
         self.buffer[pos + 1] = ((color >> 8) & 255) as u8;
         self.buffer[pos + 2] = ((color >> 16) & 255) as u8;
