@@ -29,6 +29,7 @@ impl Port {
     }
 
     /// Read value from port with an offset
+    #[allow(dead_code)]
     pub fn read_u8_offset(&self, offset: u16) -> u8 {
         commands::inb(self.port + offset)
     }

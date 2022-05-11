@@ -1,31 +1,34 @@
 use super::fonts::psf::PSF; 
 
-use crate::log;
-
 pub struct Framebuffer<'a> {
     buffer: &'a mut [u8],
     stride: usize,
     channels: usize,
-    font: PSF<'a>
+    font: PSF<'a>,
+    pub foreground: u32,
+    pub background: u32,
 }
 
 impl<'a> Framebuffer<'a> {
+    const WHITE: u32 = 0x00FFFFFF;
+    const BLACK: u32 = 0x00000000;
+
     pub fn new(buffer: &'a mut [u8], stride: usize, channels: usize, font: PSF<'a>) -> Self {
         Self {
             buffer,
             stride,
             channels,
-            font
+            font,
+            foreground: Self::WHITE,
+            background: Self::BLACK,
         }
     } 
 
     pub fn draw_rectangle(&mut self, width: usize, height: usize, color: u32, offset_x: usize, offset_y: usize) {
         for y in 0..height {
             for x in (0..width * self.channels).step_by(self.channels) {
-                self.buffer[(x + offset_x + 0 + ((y + offset_y) * self.stride * self.channels)) as usize] = (color & 255) as u8;
-                self.buffer[(x + offset_x + 1 + ((y + offset_y) * self.stride * self.channels)) as usize] = ((color >> 8u32) & 255) as u8;
-                self.buffer[(x + offset_x + 2 + ((y + offset_y) * self.stride * self.channels)) as usize] = ((color >> 16u32) & 255) as u8;
-                self.buffer[(x + offset_x + 3 + ((y + offset_y) * self.stride * self.channels)) as usize] = ((color >> 24u32) & 255) as u8;
+                let pixel = (x + offset_x + ((y + offset_y) * self.stride * self.channels)) as usize;
+                self.draw_pixel(pixel, color);
             }
         }
     }
@@ -35,14 +38,23 @@ impl<'a> Framebuffer<'a> {
 
         for (index, byte) in font_bytes.iter().enumerate() {
             for i in 0..8 {
+                let pixel = (x + (PSF::CHAR_WIDTH - i) * self.channels) + (y + index) * self.stride * self.channels;
+                
                 if *byte & (1 << i) != 0 {
-                    self.buffer[(x + (8 - i) * self.channels + 0) + (y + index) * self.stride * self.channels] = 255;
-                    self.buffer[(x + (8 - i) * self.channels + 1) + (y + index) * self.stride * self.channels] = 255;
-                    self.buffer[(x + (8 - i) * self.channels + 2) + (y + index) * self.stride * self.channels] = 255;
-                    self.buffer[(x + (8 - i) * self.channels + 3) + (y + index) * self.stride * self.channels] = 0;
+                    self.draw_pixel(pixel, self.foreground);
+                }
+                else {
+                    self.draw_pixel(pixel, self.background);
                 }
             }
         }
+    }
+
+    pub fn draw_pixel(&mut self, pos: usize, color: u32) {
+        self.buffer[pos] = (color & 255) as u8;
+        self.buffer[pos + 1] = ((color >> 8) & 255) as u8;
+        self.buffer[pos + 2] = ((color >> 16) & 255) as u8;
+        self.buffer[pos + 3] = ((color >> 24) & 255) as u8;
     }
 
     pub fn clear(&mut self) {

@@ -9,7 +9,7 @@ pub struct PSF<'a> {
 impl<'a> PSF<'a> {
     const MAGIC1: u8 = 0x36;
     const MAGIC2: u8 = 0x04;
-    const CHAR_WIDTH: u8 = 8;
+    pub const CHAR_WIDTH: usize = 8;
 
     pub fn new(data: &'a [u8]) -> Self {
         let mut font = Self {
