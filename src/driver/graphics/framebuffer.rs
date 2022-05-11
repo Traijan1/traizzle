@@ -3,8 +3,8 @@ use super::fonts::psf::PSF;
 pub struct Framebuffer<'a> {
     buffer: &'a mut [u8],
     stride: usize,
-    channels: usize,
-    font: PSF<'a>,
+    pub channels: usize,
+    pub font: PSF<'a>,
     pub foreground: u32,
     pub background: u32,
 }

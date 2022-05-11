@@ -1,7 +1,9 @@
 #![no_std]
 #![no_main]
 
+use core::fmt::Write;
 use core::panic::PanicInfo;
+use core::format_args;
 
 use bootloader::{entry_point, BootInfo};
 
@@ -12,9 +14,8 @@ mod asm;
 use utils::debug;
 
 use driver::graphics::framebuffer::Framebuffer;
-
-use crate::driver::graphics::framebuffer;
-use crate::driver::graphics::fonts::psf::PSF;
+use driver::console::Console;
+use driver::graphics::fonts::psf::PSF;
 
 entry_point!(traizzle_main);
 
@@ -44,12 +45,10 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
     framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
 
-    let mut i = 0;
-
-    "Hello World".chars().for_each(|char| {
-        framebuffer.print_char(char, 8 * 4 * i, 0);
-        i += 1;
-    });
+    let mut console = Console::new(&mut framebuffer);
+    console.write("Hello World! ");
+    console.write("Es funktioniert PogChamp ");
+    console.write_fmt(format_args!("Number: {}", 10));
 
     loop {
         asm::hlt();

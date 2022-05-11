@@ -1,5 +1,4 @@
 use core::fmt;
-
 use crate::driver::io::port::Port;
 
 /// The location of COM1
