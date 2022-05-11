@@ -44,10 +44,12 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     // framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
     // framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
 
-    framebuffer.draw_char('O', 0, 0);
-    framebuffer.draw_char('H', 48, 16);
-    framebuffer.draw_char('H', 48, 16 * 2);
-    framebuffer.draw_char('H', 48, 16 * 3);
+    let mut i = 0;
+
+    "Hello World".chars().for_each(|char| {
+        framebuffer.draw_char(char, 8 * 4 * i, 0);
+        i += 1;
+    });
 
     loop {
         asm::hlt();

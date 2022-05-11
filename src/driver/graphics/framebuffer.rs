@@ -34,14 +34,12 @@ impl<'a> Framebuffer<'a> {
         let font_bytes = self.font.get_char(char);
 
         for (index, byte) in font_bytes.iter().enumerate() {
-            log!("{:b}", *byte);
             for i in 0..8 {
                 if *byte & (1 << i) != 0 {
-                    log!("Test");
-                    self.buffer[(x + i * self.channels + 0) + (y + index) * self.stride * self.channels] = 255;
-                    self.buffer[(x + i * self.channels + 1) + (y + index) * self.stride * self.channels] = 255;
-                    self.buffer[(x + i * self.channels + 2) + (y + index) * self.stride * self.channels] = 255;
-                    self.buffer[(x + i * self.channels + 3) + (y + index) * self.stride * self.channels] = 0;
+                    self.buffer[(x + (8 - i) * self.channels + 0) + (y + index) * self.stride * self.channels] = 255;
+                    self.buffer[(x + (8 - i) * self.channels + 1) + (y + index) * self.stride * self.channels] = 255;
+                    self.buffer[(x + (8 - i) * self.channels + 2) + (y + index) * self.stride * self.channels] = 255;
+                    self.buffer[(x + (8 - i) * self.channels + 3) + (y + index) * self.stride * self.channels] = 0;
                 }
             }
         }
