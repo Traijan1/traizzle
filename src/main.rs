@@ -19,6 +19,9 @@ use driver::graphics::fonts::psf::PSF;
 
 entry_point!(traizzle_main);
 
+static mut CONSOLE: Option<Console> = None;
+static mut FRAMEBUFFER: Option<Framebuffer> = None;
+
 #[panic_handler]
 fn panic_handler(_info: &PanicInfo) -> ! {
     log!("Panic: {}", _info);
@@ -37,20 +40,51 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     let font: &[u8] = include_bytes!("assets/zap-light16.psf");
     let psf = PSF::new(font);
     
-    let mut framebuffer = Framebuffer::new(buffer, info.stride, info.bytes_per_pixel, psf);
+    let framebuffer = Framebuffer::<'static>::new(buffer, info.stride, info.bytes_per_pixel, psf);
 
-    framebuffer.clear();
+    unsafe {
+        let _ = FRAMEBUFFER.insert(framebuffer);
+    }
 
-    framebuffer.draw_rectangle(300, 300, 0x0000FF00, 0, 0);
-    framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
-    framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
+    unsafe {
+        FRAMEBUFFER.as_mut().unwrap().clear();
+    }
 
-    let mut console = Console::new(&mut framebuffer);
-    console.write("Hello World! ");
-    console.write("Es funktioniert PogChamp ");
-    console.write_fmt(format_args!("Number: {}", 10));
+    // framebuffer.draw_rectangle(300, 300, 0x0000FF00, 0, 0);
+    // framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
+    // framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
+
+    unsafe {
+        FRAMEBUFFER.as_mut().unwrap().print_char('C',0, 0);
+    }
+
+    let mut console: Console;
+
+    unsafe {
+        console = Console::<'static>::new(&mut FRAMEBUFFER);
+    }
+
+    unsafe {
+        let _ = CONSOLE.insert(console);
+    }
+
+    unsafe {
+        CONSOLE.as_mut().unwrap().write("Hello World! ");
+    }
+
+    test();
+
+    unsafe {
+        CONSOLE.as_mut().unwrap().write_fmt(format_args!("Number: {}", 10));
+    }
 
     loop {
         asm::hlt();
+    }
+}
+
+fn test() {
+    unsafe {
+        CONSOLE.as_mut().unwrap().write("Hello World! ");
     }
 }
