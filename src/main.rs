@@ -50,15 +50,7 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
         FRAMEBUFFER.as_mut().unwrap().clear();
     }
 
-    // framebuffer.draw_rectangle(300, 300, 0x0000FF00, 0, 0);
-    // framebuffer.draw_rectangle(100, 100, 0x02434633, 100, 350);
-    // framebuffer.draw_rectangle(100, 100, 0x007F2F34, 0, 10);
-
-    unsafe {
-        FRAMEBUFFER.as_mut().unwrap().print_char('C',0, 0);
-    }
-
-    let mut console: Console;
+    let console: Console;
 
     unsafe {
         console = Console::<'static>::new(&mut FRAMEBUFFER);
@@ -68,23 +60,27 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
         let _ = CONSOLE.insert(console);
     }
 
-    unsafe {
-        CONSOLE.as_mut().unwrap().write("Hello World! ");
-    }
-
-    test();
-
-    unsafe {
-        CONSOLE.as_mut().unwrap().write_fmt(format_args!("Number: {}", 10));
-    }
+    println!("Hello World {}", 10);
 
     loop {
         asm::hlt();
     }
 }
 
-fn test() {
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => ($crate::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => (print!("\n"));
+    ($($arg:tt)*) => (print!("{}\n", format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+fn _print(args: core::fmt::Arguments) {
     unsafe {
-        CONSOLE.as_mut().unwrap().write("Hello World! ");
+        let _ = CONSOLE.as_mut().unwrap().write_fmt(args);
     }
 }
