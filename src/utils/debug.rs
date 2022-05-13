@@ -25,5 +25,3 @@ pub fn _log(args: fmt::Arguments) {
     use core::fmt::Write;
     crate::debug::SERIAL_COM1.lock().write_fmt(args).unwrap();
 }
-
-

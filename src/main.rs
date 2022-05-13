@@ -40,31 +40,33 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     let font: &[u8] = include_bytes!("assets/zap-light16.psf");
     let psf = PSF::new(font);
     
-    let framebuffer = Framebuffer::<'static>::new(buffer, info.stride, info.bytes_per_pixel, psf);
-
-    unsafe {
-        let _ = FRAMEBUFFER.insert(framebuffer);
-    }
-
-    unsafe {
-        FRAMEBUFFER.as_mut().unwrap().clear();
-    }
-
-    let console: Console;
-
-    unsafe {
-        console = Console::<'static>::new(&mut FRAMEBUFFER);
-    }
-
-    unsafe {
-        let _ = CONSOLE.insert(console);
-    }
-
-    println!("Hello World {}", 10);
+    static_init!(FRAMEBUFFER, Framebuffer::<'static>::new(buffer, info.stride, info.bytes_per_pixel, psf));
+    static_init!(CONSOLE, Console::<'static>::new(&mut FRAMEBUFFER));
+    
+    clear_screen!();
+    println!("Test");
 
     loop {
         asm::hlt();
     }
+}
+
+#[macro_export]
+macro_rules! clear_screen {
+    () => {
+        unsafe {
+            FRAMEBUFFER.as_mut().unwrap().clear();
+        }   
+    };
+}
+
+#[macro_export]
+macro_rules! static_init {
+    ($obj:tt, $obj_not_static:expr) => {
+        unsafe {
+            let _ = $obj.insert($obj_not_static);
+        }
+    };
 }
 
 #[macro_export]
