@@ -10,6 +10,7 @@ impl<'a> PSF<'a> {
     const MAGIC1: u8 = 0x36;
     const MAGIC2: u8 = 0x04;
     pub const CHAR_WIDTH: usize = 8;
+    pub const CHAR_HEIGHT: usize = 16;
 
     pub fn new(data: &'a [u8]) -> Self {
         let mut font = Self {
@@ -26,7 +27,6 @@ impl<'a> PSF<'a> {
     }
 
     pub fn get_char(&self, char: char) -> &'a [u8] {
-        &self.font_data[char as usize * self.font_height as usize..]
-                       [..self.font_height as usize]
+        &self.font_data[char as usize * self.font_height as usize..][..self.font_height as usize]
     }
 }

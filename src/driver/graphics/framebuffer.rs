@@ -38,7 +38,7 @@ impl<'a> Framebuffer<'a> {
 
         for (index, byte) in font_bytes.iter().enumerate() {
             for i in 0..8 {
-                let pixel = (x + (PSF::CHAR_WIDTH - i) * self.channels) + (y + index) * self.stride * self.channels;
+                let pixel = (x + (PSF::CHAR_WIDTH - i) * self.channels) + (y * PSF::CHAR_HEIGHT + index) * self.stride * self.channels;
                 
                 if *byte & (1 << i) != 0 {
                     self.draw_pixel(pixel, self.foreground);

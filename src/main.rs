@@ -31,20 +31,23 @@ fn panic_handler(_info: &PanicInfo) -> ! {
 /// The entry point for **Traizzle**
 #[no_mangle]
 fn traizzle_main(_info: &'static mut BootInfo) -> ! {
-    log!("Bootloader Version: {}.{}.{}", _info.version_major, _info.version_minor, _info.version_patch);
-    log!("Physical Memory Offset: {:#x}", _info.physical_memory_offset.as_ref().unwrap());
-
     let info = &_info.framebuffer.as_ref().unwrap().info();
     let buffer = _info.framebuffer.as_mut().unwrap().buffer_mut();
 
     let font: &[u8] = include_bytes!("assets/zap-light16.psf");
     let psf = PSF::new(font);
     
-    static_init!(FRAMEBUFFER, Framebuffer::<'static>::new(buffer, info.stride, info.bytes_per_pixel, psf));
-    static_init!(CONSOLE, Console::<'static>::new(&mut FRAMEBUFFER));
+    static_init!(FRAMEBUFFER, Framebuffer::new(buffer, info.stride, info.bytes_per_pixel, psf));
+    static_init!(CONSOLE, Console::new(&mut FRAMEBUFFER));
     
     clear_screen!();
     println!("Test");
+    unsafe { CONSOLE.as_mut().unwrap().change_foreground_color(0x00FF0000); }
+    println!("\tHello World");
+    unsafe { CONSOLE.as_mut().unwrap().change_foreground_color(0x0067F5FF); }
+    println!("Hello World with New Lines!");
+    print!("Test");
+    print!("Test");
 
     loop {
         asm::hlt();
@@ -55,7 +58,7 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
 macro_rules! clear_screen {
     () => {
         unsafe {
-            FRAMEBUFFER.as_mut().unwrap().clear();
+            CONSOLE.as_mut().unwrap().clear();
         }   
     };
 }
