@@ -24,7 +24,10 @@ static mut FRAMEBUFFER: Option<Framebuffer> = None;
 
 #[panic_handler]
 fn panic_handler(_info: &PanicInfo) -> ! {
-    log!("Panic: {}", _info);
+    unsafe { CONSOLE.as_mut().unwrap().change_background_color(0x008b0000); }
+    unsafe { CONSOLE.as_mut().unwrap().change_foreground_color(0x00FFFFFF); }
+    clear_screen!();
+    println!("Panic: {}", _info);
     loop {}
 }
 
@@ -48,6 +51,8 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     println!("Hello World with New Lines!");
     print!("Test");
     print!("Test");
+
+    panic!("Panic :(");
 
     loop {
         asm::hlt();

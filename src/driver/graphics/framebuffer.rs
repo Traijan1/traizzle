@@ -59,8 +59,8 @@ impl<'a> Framebuffer<'a> {
     }
 
     pub fn clear(&mut self) {
-        for i in 0..self.buffer.len() {
-            self.buffer[i] = 0;
+        for i in (0..self.buffer.len()).step_by(4) {
+            self.draw_pixel(i, self.background);
         }
     }
 }
