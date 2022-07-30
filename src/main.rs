@@ -27,6 +27,7 @@ fn panic_handler(_info: &PanicInfo) -> ! {
     unsafe { CONSOLE.as_mut().unwrap().change_background_color(0x008b0000); }
     unsafe { CONSOLE.as_mut().unwrap().change_foreground_color(0x00FFFFFF); }
     clear_screen!();
+    log!("Panic: {}", _info);
     println!("Panic: {}", _info);
     loop {}
 }
@@ -49,10 +50,35 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     println!("\tHello World");
     unsafe { CONSOLE.as_mut().unwrap().change_foreground_color(0x0067F5FF); }
     println!("Hello World with New Lines!");
-    print!("Test");
-    print!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
+    println!("Test");
 
-    panic!("Panic :(");
 
     loop {
         asm::hlt();
@@ -84,7 +110,7 @@ macro_rules! print {
 
 #[macro_export]
 macro_rules! println {
-    () => (print!("\n"));
+    () => (println!("\n"));
     ($($arg:tt)*) => (print!("{}\n", format_args!($($arg)*)));
 }
 

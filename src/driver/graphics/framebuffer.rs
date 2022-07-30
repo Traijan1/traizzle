@@ -2,7 +2,7 @@ use super::fonts::psf::PSF;
 
 pub struct Framebuffer<'a> {
     buffer: &'a mut [u8],
-    stride: usize,
+    pub stride: usize,
     pub channels: usize,
     pub font: PSF<'a>,
     pub foreground: u32,
@@ -39,13 +39,13 @@ impl<'a> Framebuffer<'a> {
         for (index, byte) in font_bytes.iter().enumerate() {
             for i in 0..8 {
                 let pixel = (x + (PSF::CHAR_WIDTH - i) * self.channels) + (y * PSF::CHAR_HEIGHT + index) * self.stride * self.channels;
-                
-                if *byte & (1 << i) != 0 {
-                    self.draw_pixel(pixel, self.foreground);
+
+                self.draw_pixel(pixel, if *byte & (1 << i) != 0 {
+                    self.foreground
                 }
                 else {
-                    self.draw_pixel(pixel, self.background);
-                }
+                    self.background
+                });
             }
         }
     }

@@ -1,4 +1,4 @@
-use super::graphics::framebuffer::Framebuffer;
+use super::graphics::{framebuffer::{Framebuffer, self}, fonts::psf::PSF};
 
 use core::fmt;
 
@@ -10,14 +10,19 @@ macro_rules! mut_framebuffer {
 
 pub struct Console<'a> {
     framebuffer: &'a mut Option<Framebuffer<'a>>,
+    max_column: usize,
     column: usize,
     row: usize
 }
 
 impl<'a> Console<'a> {
     pub fn new(framebuffer: &'a mut Option<Framebuffer<'a>>) -> Self {
+        let cache_buffer = framebuffer.as_mut().unwrap();
+        let max_column = cache_buffer.stride / PSF::CHAR_WIDTH;
+
         Self { 
             framebuffer,
+            max_column,
             column: 0,
             row: 0
         }
@@ -34,6 +39,9 @@ impl<'a> Console<'a> {
             frame.print_char(char, self.column * 8 * frame.channels, self.row);
             self.column += 1;
 
+            if self.column >= self.max_column {
+                self.handle_special_character('\n');
+            }
         }
     }
 
