@@ -41,10 +41,8 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     let font: &[u8] = include_bytes!("assets/zap-light16.psf");
     let psf = PSF::new(font);
 
-    let rows = (buffer.len() / info.bytes_per_pixel) / info.stride;
-    log!("{rows}");
     
-    static_init!(FRAMEBUFFER, Framebuffer::new(buffer, info.stride, info.bytes_per_pixel, psf));
+    static_init!(FRAMEBUFFER, Framebuffer::new(buffer, info.stride, info.bytes_per_pixel, info.vertical_resolution, psf));
     static_init!(CONSOLE, Console::new(&mut FRAMEBUFFER));
     
     clear_screen!();

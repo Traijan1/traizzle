@@ -12,6 +12,7 @@ pub struct Console<'a> {
     framebuffer: &'a mut Option<Framebuffer<'a>>,
     max_column: usize,
     column: usize,
+    max_rows: usize,
     row: usize
 }
 
@@ -19,12 +20,14 @@ impl<'a> Console<'a> {
     pub fn new(framebuffer: &'a mut Option<Framebuffer<'a>>) -> Self {
         let cache_buffer = framebuffer.as_mut().unwrap();
         let max_column = cache_buffer.stride / PSF::CHAR_WIDTH;
+        let max_rows = cache_buffer.rows / PSF::CHAR_HEIGHT;
 
         Self { 
             framebuffer,
             max_column,
             column: 0,
-            row: 0
+            max_rows,
+            row: max_rows - 1
         }
     }
 
@@ -46,21 +49,19 @@ impl<'a> Console<'a> {
     }
 
     pub fn clear(&mut self) {
-        self.framebuffer.as_mut().unwrap().clear();
+        mut_framebuffer!(self).clear();
         self.column = 0;
-        self.row = 0;
+        // self.row = 0;
     }
 
     #[inline(always)]
     pub fn change_foreground_color(&mut self, color: u32) {
-        let framebuffer = mut_framebuffer!(self);
-        framebuffer.foreground = color;
+        mut_framebuffer!(self).foreground = color;
     }
 
     #[inline(always)]
     pub fn change_background_color(&mut self, color: u32) {
-        let framebuffer = mut_framebuffer!(self);
-        framebuffer.background = color;
+        mut_framebuffer!(self).background = color;
     }
 
     #[inline(always)]
@@ -73,7 +74,7 @@ impl<'a> Console<'a> {
     fn handle_special_character(&mut self, c: char) -> bool {
         match c {
             '\n' => {
-                self.row += 1;
+                // self.row += 1;
                 self.column = 0;
 
                 true

@@ -7,13 +7,14 @@ pub struct Framebuffer<'a> {
     pub font: PSF<'a>,
     pub foreground: u32,
     pub background: u32,
+    pub rows: usize
 }
 
 impl<'a> Framebuffer<'a> {
     const WHITE: u32 = 0x00FFFFFF;
     const BLACK: u32 = 0x00000000;
 
-    pub fn new(buffer: &'a mut [u8], stride: usize, channels: usize, font: PSF<'a>) -> Self {
+    pub fn new(buffer: &'a mut [u8], stride: usize, channels: usize, rows: usize, font: PSF<'a>) -> Self {
         Self {
             buffer,
             stride,
@@ -21,6 +22,7 @@ impl<'a> Framebuffer<'a> {
             font,
             foreground: Self::WHITE,
             background: Self::BLACK,
+            rows: rows
         }
     } 
 
