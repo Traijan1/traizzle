@@ -40,6 +40,9 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
 
     let font: &[u8] = include_bytes!("assets/zap-light16.psf");
     let psf = PSF::new(font);
+
+    let rows = (buffer.len() / info.bytes_per_pixel) / info.stride;
+    log!("{rows}");
     
     static_init!(FRAMEBUFFER, Framebuffer::new(buffer, info.stride, info.bytes_per_pixel, psf));
     static_init!(CONSOLE, Console::new(&mut FRAMEBUFFER));
@@ -50,34 +53,34 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     println!("\tHello World");
     unsafe { CONSOLE.as_mut().unwrap().change_foreground_color(0x0067F5FF); }
     println!("Hello World with New Lines!");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
-    println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
+    // println!("Test");
 
 
     loop {
