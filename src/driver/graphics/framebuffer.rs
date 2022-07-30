@@ -50,7 +50,7 @@ impl<'a> Framebuffer<'a> {
         }
     }
 
-    #[inline]
+    #[inline(always)]
     fn draw_pixel(&mut self, pos: usize, color: u32) {
         self.buffer[pos] = (color & 255) as u8;
         self.buffer[pos + 1] = ((color >> 8) & 255) as u8;
