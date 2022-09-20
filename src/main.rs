@@ -51,35 +51,6 @@ fn traizzle_main(_info: &'static mut BootInfo) -> ! {
     println!("\tHello World");
     unsafe { CONSOLE.as_mut().unwrap().change_foreground_color(0x0067F5FF); }
     println!("Hello World with New Lines!");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-    // println!("Test");
-
 
     loop {
         asm::hlt();
