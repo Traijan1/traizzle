@@ -1,7 +1,7 @@
 # Traizzle
 
 Traizzle is my kernel project in which I want to learn more about Kernel and OS Programming.  
-I develop only it when I have enough time for it.
+I'm only working on it, when I have the time for it
 
 <br>
 
