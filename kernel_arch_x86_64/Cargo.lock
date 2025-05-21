@@ -13,4 +13,9 @@ name = "kernel_arch_x86_64"
 version = "0.1.0"
 dependencies = [
  "bootloader",
+ "kernel_drivers",
 ]
+
+[[package]]
+name = "kernel_drivers"
+version = "0.1.0"
