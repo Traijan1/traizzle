@@ -1,4 +1,48 @@
 use crate::driver::{GraphicsWriter, Writer};
+use lazy_static::lazy_static;
+use spin::Mutex;
+
+lazy_static! {
+    pub static ref GLOBAL_VGA_WRITER: Mutex<VgaBuffer> = Mutex::new(VgaBuffer::new());
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Color {
+    Black = 0,
+    Blue = 1,
+    Green = 2,
+    Cyan = 3,
+    Red = 4,
+    Magenta = 5,
+    Brown = 6,
+    LightGray = 7,
+    DarkGray = 8,
+    LightBlue = 9,
+    LightGreen = 10,
+    LightCyan = 11,
+    LightRed = 12,
+    Pink = 13,
+    Yellow = 14,
+    White = 15,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ColorCode {
+    pub foreground: Color,
+    pub background: Color,
+}
+
+impl ColorCode {
+    pub fn new(foreground: Color, background: Color) -> Self {
+        ColorCode { foreground, background }
+    }
+
+    pub fn into_u8(self) -> u8 {
+        (self.background as u8) << 4 | (self.foreground as u8)
+    }
+}
 
 const VGA_BUFFER_ADDRESS: usize = 0xb8000;
 const BUFFER_HEIGHT: usize = 10;
@@ -19,7 +63,7 @@ type VgaBufferArray = [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT];
 pub struct VgaBuffer {
     column_position: usize,
     row_position: usize,
-    color_code: u8, // Default color
+    color_code: ColorCode, // Default color
 }
 
 impl VgaBuffer {
@@ -28,7 +72,7 @@ impl VgaBuffer {
         VgaBuffer {
             column_position: 0,
             row_position: 0,
-            color_code: 0x0f, // Default: White on Black
+            color_code: ColorCode::new(Color::White, Color::Black),
         }
     }
 
@@ -50,7 +94,7 @@ impl VgaBuffer {
                 unsafe {
                     (*vga_buffer)[row][col] = ScreenChar {
                         ascii_character: byte,
-                        color_code: self.color_code,
+                        color_code: self.color_code.into_u8(),
                     };
                 }
 
@@ -78,7 +122,7 @@ impl GraphicsWriter for VgaBuffer {
         self.column_position = 0;
     }
 
-    fn set_color(&mut self, color_code: u8) {
+    fn set_color(&mut self, color_code: ColorCode) {
         self.color_code = color_code;
     }
 
@@ -115,7 +159,7 @@ impl GraphicsWriter for VgaBuffer {
     fn clear_row(&mut self, row: usize) {
         let blank_char = ScreenChar {
             ascii_character: b' ',
-            color_code: self.color_code,
+            color_code: self.color_code.into_u8(),
         };
         let vga_buffer = VGA_BUFFER_ADDRESS as *mut VgaBufferArray;
 
@@ -125,4 +169,12 @@ impl GraphicsWriter for VgaBuffer {
             }
         }
     }
+}
+
+// Example usage:
+// set_color!(Color::Yellow, Color::Red);
+macro_rules! set_color {
+    ($foreground:expr, $background:expr) => {
+        GLOBAL_VGA_WRITER.lock().set_color(ColorCode::new($foreground, $background))
+    };
 }
